@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>長輩互聯網安心學習站</title>
+  <meta name="description" content="一個為老年人設計的互聯網入門學習網頁，包含常用場景、安全提醒、真假訊息判斷與互動小測驗。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6f78'/%3E%3Cpath d='M14 33a18 18 0 0 1 36 0' fill='none' stroke='%23f6c85f' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='36' r='11' fill='%23ffffff'/%3E%3Cpath d='M26 36l4 4 9-10' fill='none' stroke='%23c94f4f' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #f7f4ec;
+      --paper: #fffdfa;
+      --ink: #24313a;
+      --muted: #65737d;
+      --teal: #1f6f78;
+      --teal-dark: #16515a;
+      --coral: #c94f4f;
+      --sun: #f6c85f;
+      --leaf: #4b8b64;
+      --plum: #655070;
+      --line: #dfd8ca;
+      --shadow: 0 18px 45px rgba(36, 49, 58, 0.12);
+      --radius: 8px;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(246, 200, 95, 0.23), transparent 26rem),
+        linear-gradient(180deg, #f8f5ed 0%, #edf5f1 48%, #f7f4ec 100%);
+      color: var(--ink);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    body.large-text {
+      font-size: 19px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--teal-dark);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem clamp(1rem, 4vw, 3rem);
+      background: rgba(255, 253, 250, 0.9);
+      border-bottom: 1px solid rgba(223, 216, 202, 0.85);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      color: var(--teal-dark);
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 2.4rem;
+      height: 2.4rem;
+      display: grid;
+      place-items: center;
+      background: var(--teal);
+      border-radius: 8px;
+      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.14);
+    }
+
+    .brand-mark svg {
+      width: 1.55rem;
+      height: 1.55rem;
+      color: #fff;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .ghost-btn,
+    .primary-btn,
+    .icon-btn,
+    .choice-btn,
+    .tab-btn {
+      border: 0;
+      min-height: 2.9rem;
+      border-radius: var(--radius);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .ghost-btn {
+      padding: 0.65rem 0.95rem;
+      background: #f2ebdc;
+      color: var(--ink);
+      border: 1px solid #e3d8c3;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.15rem;
+      background: var(--teal);
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(31, 111, 120, 0.22);
+    }
+
+    .primary-btn svg,
+    .ghost-btn svg,
+    .icon-btn svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex: 0 0 auto;
+    }
+
+    .ghost-btn:hover,
+    .primary-btn:hover,
+    .icon-btn:hover,
+    .choice-btn:hover,
+    .tab-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .icon-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 2.9rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--teal-dark);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(19rem, 0.95fr);
+      gap: clamp(1.2rem, 4vw, 3rem);
+      align-items: stretch;
+      padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 4vw, 3rem) 1.5rem;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.1rem;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(246, 200, 95, 0.26);
+      border: 1px solid rgba(246, 200, 95, 0.8);
+      color: #6d4f10;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.25rem, 6vw, 4.8rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+      color: #17383f;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 40rem;
+      font-size: 1.18rem;
+      color: #40505a;
+    }
+
+    .quick-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.35rem;
+    }
+
+    .panel {
+      background: rgba(255, 253, 250, 0.95);
+      border: 1px solid rgba(223, 216, 202, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .practice-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+      min-height: 31rem;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.15rem;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(31, 111, 120, 0.08), rgba(246, 200, 95, 0.14));
+    }
+
+    .panel-head h2,
+    .section-title h2,
+    .card h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .panel-head h2 {
+      font-size: 1.25rem;
+    }
+
+    .progress-wrap {
+      min-width: 8.4rem;
+      text-align: right;
+    }
+
+    .progress-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .progress-track {
+      width: 8.4rem;
+      height: 0.55rem;
+      background: #e9e2d4;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      display: block;
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--leaf), var(--sun));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .lesson-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      padding: 1rem 1rem 0;
+    }
+
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.7rem 0.4rem;
+      background: #f3eee5;
+      color: #394850;
+      border: 1px solid #e6ddcc;
+      font-weight: 800;
+    }
+
+    .tab-btn svg {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+
+    .tab-btn.active {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+      box-shadow: 0 10px 20px rgba(31, 111, 120, 0.2);
+    }
+
+    .lesson-body {
+      padding: 1.1rem;
+    }
+
+    .lesson-card {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .lesson-card h3 {
+      margin: 0;
+      font-size: 1.7rem;
+      color: #17383f;
+    }
+
+    .lesson-card p {
+      margin: 0;
+      color: #43525b;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0.65rem;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.65rem;
+      align-items: start;
+      padding: 0.72rem;
+      background: #f8f3e9;
+      border: 1px solid #e8ddc9;
+      border-radius: var(--radius);
+    }
+
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--teal-dark);
+      font-weight: 900;
+      border: 2px solid var(--sun);
+    }
+
+    .tip-strip {
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      padding: 0.9rem;
+      background: #edf7f0;
+      color: #294e39;
+      border-top: 1px solid #d5e8da;
+    }
+
+    .tip-strip svg {
+      flex: 0 0 auto;
+      width: 1.35rem;
+      height: 1.35rem;
+      margin-top: 0.14rem;
+    }
+
+    main {
+      padding: 0 clamp(1rem, 4vw, 3rem) 3rem;
+    }
+
+    .content-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .section-title h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: #17383f;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 33rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      padding: 1.15rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 24px rgba(36, 49, 58, 0.08);
+      min-width: 0;
+    }
+
+    .card-icon {
+      width: 3rem;
+      height: 3rem;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+    }
+
+    .card-icon svg {
+      width: 1.55rem;
+      height: 1.55rem;
+    }
+
+    .card:nth-child(1) .card-icon { background: rgba(31, 111, 120, 0.14); color: var(--teal-dark); }
+    .card:nth-child(2) .card-icon { background: rgba(201, 79, 79, 0.13); color: var(--coral); }
+    .card:nth-child(3) .card-icon { background: rgba(246, 200, 95, 0.23); color: #826016; }
+
+    .card h3 {
+      font-size: 1.25rem;
+      color: #21343c;
+    }
+
+    .card ul {
+      padding-left: 1.2rem;
+      margin: 0.75rem 0 0;
+      color: #46555e;
+    }
+
+    .interactive-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .scenario-card,
+    .quiz-card,
+    .checklist-card {
+      padding: 1.15rem;
+    }
+
+    .scenario-box {
+      margin: 0.8rem 0;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: #f4f7f6;
+      border: 1px solid #d8e5e1;
+    }
+
+    .scenario-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.55rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .scenario-text {
+      margin: 0;
+      font-size: 1.12rem;
+      color: #25343b;
+    }
+
+    .choice-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+    }
+
+    .choice-btn {
+      padding: 0.85rem;
+      font-weight: 900;
+      border: 2px solid transparent;
+    }
+
+    .choice-btn.safe {
+      background: #eaf6ee;
+      color: #28543a;
+      border-color: #b9dbc5;
+    }
+
+    .choice-btn.risky {
+      background: #fbeceb;
+      color: #7a2e2e;
+      border-color: #ecc2be;
+    }
+
+    .feedback {
+      min-height: 4.5rem;
+      margin-top: 0.9rem;
+      padding: 0.85rem;
+      border-radius: var(--radius);
+      background: #fff7df;
+      border: 1px solid #ecd481;
+      color: #5e4912;
+    }
+
+    .quiz-question {
+      margin: 0.85rem 0;
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #24313a;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .quiz-options button {
+      text-align: left;
+      padding: 0.78rem 0.85rem;
+      background: #f7f1e6;
+      border: 1px solid #e4d8c5;
+      border-radius: var(--radius);
+      color: #2b3a42;
+    }
+
+    .quiz-options button.selected {
+      background: #dcefeb;
+      border-color: var(--teal);
+      box-shadow: inset 4px 0 0 var(--teal);
+    }
+
+    .quiz-result {
+      min-height: 3.2rem;
+      margin-top: 0.9rem;
+      color: #33434c;
+    }
+
+    .resource-band {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 1rem;
+      align-items: center;
+      padding: 1.2rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, #164f58 0%, #1f6f78 50%, #655070 100%);
+      color: #fff;
+    }
+
+    .resource-band h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: #fff;
+    }
+
+    .resource-band p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .compass {
+      width: 100%;
+      max-width: 22rem;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+      padding: 0;
+      margin: 1rem 0 0;
+      list-style: none;
+    }
+
+    .check-item {
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: var(--radius);
+    }
+
+    .check-item input {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: 0.23rem;
+      accent-color: var(--sun);
+      flex: 0 0 auto;
+    }
+
+    .footer-note {
+      padding: 1rem 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .interactive-grid,
+      .resource-band {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .practice-panel {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      h1 {
+        font-size: 2.45rem;
+      }
+
+      .panel-head,
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .progress-wrap,
+      .progress-track {
+        width: 100%;
+        min-width: 0;
+        text-align: left;
+      }
+
+      .lesson-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .choice-row,
+      .checklist {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand" aria-label="長輩互聯網安心學習站">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 13a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+            <path d="M8.5 13a3.5 3.5 0 0 1 7 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+            <path d="M12 17.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>安心上網</span>
+      </div>
+      <nav class="nav-actions" aria-label="頁面操作">
+        <button class="ghost-btn" id="fontToggle" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h9M4 17h16M4 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          大字模式
+        </button>
+        <a class="primary-btn" href="#practice">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg>
+          開始練習
+        </a>
+      </nav>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <span class="eyebrow">給長輩的互聯網入門課</span>
+        <h1>每天十分鐘，安心用網絡。</h1>
+        <p>從搜尋資料、與家人聯絡，到辨認可疑訊息。這個小網頁用大字、清楚步驟和互動練習，陪長輩慢慢熟悉互聯網。</p>
+        <div class="quick-row" aria-label="快速入口">
+          <a class="primary-btn" href="#lessons">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 0-4-4V4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            看學習內容
+          </a>
+          <a class="ghost-btn" href="#safety">安全清單</a>
+        </div>
+      </div>
+
+      <aside class="panel practice-panel" id="lessons" aria-label="互動學習主題">
+        <div class="panel-head">
+          <div>
+            <h2>今日學習</h2>
+            <span>選一個主題，跟著三步驟試一次。</span>
+          </div>
+          <div class="progress-wrap">
+            <span class="progress-label" id="progressText">完成 1 / 4</span>
+            <span class="progress-track" aria-hidden="true"><span class="progress-fill" id="progressFill"></span></span>
+          </div>
+        </div>
+        <div class="lesson-tabs" role="tablist" aria-label="學習主題">
+          <button class="tab-btn active" type="button" data-topic="search" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" stroke-width="2"/><path d="m15 15 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            搜尋
+          </button>
+          <button class="tab-btn" type="button" data-topic="chat" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14v9H9l-4 4V6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            聯絡
+          </button>
+          <button class="tab-btn" type="button" data-topic="pay" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 10h16M8 15h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            付款
+          </button>
+          <button class="tab-btn" type="button" data-topic="privacy" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 2.8 7.6 7 9 4.2-1.4 7-4.6 7-9V6l-7-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            隱私
+          </button>
+        </div>
+        <div class="lesson-body" id="lessonBody"></div>
+        <div class="tip-strip">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V19h8v-3.3A7 7 0 0 0 12 3Z" stroke="currentColor" stroke-width="2"/><path d="M9 22h6M10 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <strong id="dailyTip">遇到不確定的畫面，先停下，不要急著按確認。</strong>
+        </div>
+      </aside>
+    </section>
+
+    <main>
+      <div class="content-shell">
+        <section aria-labelledby="knowledgeTitle">
+          <div class="section-title">
+            <div>
+              <h2 id="knowledgeTitle">先記住三件事</h2>
+              <p>互聯網很好用，但最重要是慢慢來、看清楚、不怕問。</p>
+            </div>
+          </div>
+          <div class="cards-grid">
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/></svg>
+              </div>
+              <h3>先看網址和名稱</h3>
+              <ul>
+                <li>銀行、醫院、政府網站要從官方渠道進入。</li>
+                <li>網址有奇怪拼寫、很多符號，就先關掉。</li>
+                <li>收到連結後，不急著點，可先問家人。</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 17h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M10.3 4.7 3.8 16a2 2 0 0 0 1.7 3h13a2 2 0 0 0 1.7-3L13.7 4.7a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              </div>
+              <h3>不要透露六種資料</h3>
+              <ul>
+                <li>身份證號、銀行卡號、密碼、驗證碼。</li>
+                <li>住址、家人資料、大額轉帳截圖。</li>
+                <li>任何人催你「現在就做」，都要停一停。</li>
+              </ul>
+            </article>
+            <article class="card">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 12 9 17 20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <h3>學會一個求助句</h3>
+              <ul>
+                <li>「我先確認一下，再回覆你。」</li>
+                <li>「請你把資料發給我，我讓家人一起看看。」</li>
+                <li>「我不在電話裡說密碼和驗證碼。」</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="interactive-grid" id="practice" aria-labelledby="practiceTitle">
+          <article class="panel scenario-card">
+            <div class="section-title">
+              <div>
+                <h2 id="practiceTitle">真假訊息判斷</h2>
+                <p>讀一讀訊息，選擇「可以放心」或「要小心」。</p>
+              </div>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-meta">
+                <span id="scenarioFrom">訊息 1</span>
+                <strong id="scenarioScore">答對 0 題</strong>
+              </div>
+              <p class="scenario-text" id="scenarioText"></p>
+            </div>
+            <div class="choice-row">
+              <button class="choice-btn safe" type="button" data-answer="safe">可以放心</button>
+              <button class="choice-btn risky" type="button" data-answer="risky">要小心</button>
+            </div>
+            <div class="feedback" id="scenarioFeedback">先看清楚內容，再作判斷。</div>
+          </article>
+
+          <article class="panel quiz-card">
+            <div class="section-title">
+              <div>
+                <h2>安全小測驗</h2>
+                <p>每題只有一個最合適的做法。</p>
+              </div>
+            </div>
+            <p class="quiz-question" id="quizQuestion"></p>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-result" id="quizResult"></div>
+            <button class="primary-btn" id="nextQuiz" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              下一題
+            </button>
+          </article>
+        </section>
+
+        <section class="panel resource-band" id="safety" aria-labelledby="safetyTitle">
+          <svg class="compass" viewBox="0 0 340 260" role="img" aria-label="上網安全羅盤圖">
+            <rect x="18" y="18" width="304" height="224" rx="8" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.32)" stroke-width="2"/>
+            <circle cx="170" cy="130" r="76" fill="rgba(255,255,255,.16)" stroke="#f6c85f" stroke-width="5"/>
+            <path d="M170 61v138M101 130h138" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M170 72 190 142 170 130 150 142 170 72Z" fill="#f6c85f"/>
+            <path d="M170 188 151 119 170 130 189 119 170 188Z" fill="#ffffff"/>
+            <text x="170" y="39" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" fill="#fff" font-weight="700">先停</text>
+            <text x="170" y="232" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" fill="#fff" font-weight="700">再問</text>
+            <text x="58" y="136" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" fill="#fff" font-weight="700">看清</text>
+            <text x="282" y="136" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" fill="#fff" font-weight="700">確認</text>
+          </svg>
+          <div class="checklist-card">
+            <h2 id="safetyTitle">上網前安全清單</h2>
+            <p>可以把這四句話放在手機旁邊。每次付款、登入或收到陌生訊息前，先勾一次。</p>
+            <ul class="checklist" id="safetyChecklist">
+              <li class="check-item"><input type="checkbox" id="check1"><label for="check1">我看清楚對方是誰。</label></li>
+              <li class="check-item"><input type="checkbox" id="check2"><label for="check2">我沒有說出密碼或驗證碼。</label></li>
+              <li class="check-item"><input type="checkbox" id="check3"><label for="check3">我沒有被催著立刻轉帳。</label></li>
+              <li class="check-item"><input type="checkbox" id="check4"><label for="check4">不確定時，我會先問可信任的人。</label></li>
+            </ul>
+          </div>
+        </section>
+
+        <p class="footer-note">慢慢學、重複練習就會熟悉。互聯網是工具，安全永遠比速度更重要。</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const iconSet = {
+      search: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" stroke-width="2"/><path d="m15 15 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+      chat: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14v9H9l-4 4V6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
+      pay: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 10h16M8 15h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+      privacy: '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 2.8 7.6 7 9 4.2-1.4 7-4.6 7-9V6l-7-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    };
+
+    const lessons = {
+      search: {
+        title: '搜尋資料：先問清楚，再看來源',
+        intro: '想查天氣、醫院時間、交通路線，可以用搜尋。不要只看第一個結果，要看看來源是否可靠。',
+        steps: ['輸入簡單關鍵字，例如「附近醫院 門診時間」。', '優先看政府、醫院、學校、知名平台的頁面。', '看到健康或投資建議時，多看兩個來源再決定。'],
+        tip: '健康、金錢、藥物相關內容，不要只相信短影片或轉發文章。'
+      },
+      chat: {
+        title: '與家人聯絡：確認身份再回覆',
+        intro: '訊息、語音和視訊讓聯絡更方便。收到陌生人或奇怪要求時，要先確認對方身份。',
+        steps: ['家人換新號碼時，用原來的電話再確認一次。', '不要在群組裡公開住址、證件號和行程。', '視訊前先檢查鏡頭畫面，避免拍到私人文件。'],
+        tip: '有人自稱家人急需用錢，先打電話確認，不要只靠文字訊息。'
+      },
+      pay: {
+        title: '網上付款：小額試、看清楚、留記錄',
+        intro: '網購和電子付款很方便，但付款前要核對店名、金額和收款方。',
+        steps: ['只在熟悉的平台付款，不掃陌生人發來的收款碼。', '付款前讀出金額和收款名稱，確認沒錯再按。', '付款後截圖或保留通知，方便之後查詢。'],
+        tip: '任何人要求你借錢、墊付、退保證金，都要先問家人或客服。'
+      },
+      privacy: {
+        title: '保護隱私：密碼和驗證碼只屬於自己',
+        intro: '密碼就像家門鑰匙，驗證碼像臨時鑰匙。這兩樣都不能告訴別人。',
+        steps: ['每個重要帳號使用不同密碼，不用生日或電話號碼。', '手機跳出授權視窗時，先看它要讀取什麼資料。', '不常用的 App 可以刪除，減少資料外流機會。'],
+        tip: '客服、銀行、公安、快遞都不應向你索取完整密碼或短信驗證碼。'
+      }
+    };
+
+    const scenarios = [
+      {
+        from: '訊息 1',
+        text: '「我是銀行客服，你的帳戶有風險。請立刻告訴我短信驗證碼，我幫你解除限制。」',
+        answer: 'risky',
+        feedback: '要小心。真正的銀行客服不會向你索取短信驗證碼。應掛斷電話，自己撥打銀行官方電話確認。'
+      },
+      {
+        from: '訊息 2',
+        text: '「明天下午一起視訊嗎？我還是用原來這個號碼，你方便時回覆就好。」',
+        answer: 'safe',
+        feedback: '比較放心。對方沒有要求金錢、密碼或連結。不過如果內容突然變奇怪，仍要再次確認。'
+      },
+      {
+        from: '訊息 3',
+        text: '「恭喜中獎，點擊連結填身份證和銀行卡，今天不填就失效。」',
+        answer: 'risky',
+        feedback: '要小心。中獎、限時、索取證件和銀行卡，是常見騙局信號。不要點連結。'
+      },
+      {
+        from: '訊息 4',
+        text: '「社區衛生中心提醒：本週五上午可在服務台諮詢慢病管理，無需提供銀行資料。」',
+        answer: 'safe',
+        feedback: '比較放心。內容清楚，沒有要求敏感資料或轉帳。仍可通過社區官方電話再確認時間。'
+      }
+    ];
+
+    const quiz = [
+      {
+        q: '收到陌生連結說可以領補貼，最合適的做法是？',
+        options: ['馬上填資料', '先轉發給更多朋友', '不點連結，找官方渠道查詢'],
+        answer: 2
+      },
+      {
+        q: '有人說「請把驗證碼念給我」，你應該怎樣做？',
+        options: ['拒絕，並結束通話', '只念前兩位', '先問他是不是客服'],
+        answer: 0
+      },
+      {
+        q: '設定密碼時，哪一個比較好？',
+        options: ['自己的生日', '12345678', '一句容易記住但別人猜不到的話加數字'],
+        answer: 2
+      }
+    ];
+
+    const lessonBody = document.getElementById('lessonBody');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const dailyTip = document.getElementById('dailyTip');
+    const visited = new Set(['search']);
+
+    function renderLesson(topic) {
+      const data = lessons[topic];
+      lessonBody.innerHTML = `
+        <article class="lesson-card">
+          <h3>${data.title}</h3>
+          <p>${data.intro}</p>
+          <ol class="steps">
+            ${data.steps.map((step, index) => `<li><span class="step-number">${index + 1}</span><span>${step}</span></li>`).join('')}
+          </ol>
+        </article>
+      `;
+      dailyTip.textContent = data.tip;
+      visited.add(topic);
+      progressText.textContent = `完成 ${visited.size} / 4`;
+      progressFill.style.width = `${visited.size * 25}%`;
+    }
+
+    document.querySelectorAll('.tab-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((tab) => {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+        });
+        button.classList.add('active');
+        button.setAttribute('aria-selected', 'true');
+        renderLesson(button.dataset.topic);
+      });
+    });
+
+    renderLesson('search');
+
+    document.getElementById('fontToggle').addEventListener('click', () => {
+      document.body.classList.toggle('large-text');
+    });
+
+    let scenarioIndex = 0;
+    let scenarioScore = 0;
+    const scenarioText = document.getElementById('scenarioText');
+    const scenarioFrom = document.getElementById('scenarioFrom');
+    const scenarioFeedback = document.getElementById('scenarioFeedback');
+    const scenarioScoreText = document.getElementById('scenarioScore');
+
+    function renderScenario() {
+      const current = scenarios[scenarioIndex];
+      scenarioFrom.textContent = current.from;
+      scenarioText.textContent = current.text;
+      scenarioFeedback.textContent = '先看清楚內容，再作判斷。';
+      scenarioScoreText.textContent = `答對 ${scenarioScore} 題`;
+    }
+
+    document.querySelectorAll('.choice-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        const current = scenarios[scenarioIndex];
+        const correct = button.dataset.answer === current.answer;
+        if (correct) {
+          scenarioScore += 1;
+        }
+        scenarioFeedback.textContent = `${correct ? '判斷正確。' : '這題再想一想。'}${current.feedback}`;
+        scenarioScoreText.textContent = `答對 ${scenarioScore} 題`;
+        window.setTimeout(() => {
+          scenarioIndex = (scenarioIndex + 1) % scenarios.length;
+          renderScenario();
+        }, 2600);
+      });
+    });
+
+    renderScenario();
+
+    let quizIndex = 0;
+    let selectedOption = null;
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizOptions = document.getElementById('quizOptions');
+    const quizResult = document.getElementById('quizResult');
+
+    function renderQuiz() {
+      const current = quiz[quizIndex];
+      selectedOption = null;
+      quizQuestion.textContent = current.q;
+      quizResult.textContent = '選好答案後，按「下一題」查看結果。';
+      quizOptions.innerHTML = current.options.map((option, index) => `<button type="button" data-index="${index}">${option}</button>`).join('');
+      quizOptions.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          selectedOption = Number(button.dataset.index);
+          quizOptions.querySelectorAll('button').forEach((item) => item.classList.remove('selected'));
+          button.classList.add('selected');
+        });
+      });
+    }
+
+    document.getElementById('nextQuiz').addEventListener('click', () => {
+      if (selectedOption === null) {
+        quizResult.textContent = '請先選一個答案。';
+        return;
+      }
+      const current = quiz[quizIndex];
+      quizResult.textContent = selectedOption === current.answer ? '答對了。這是安全的做法。' : `這題要選：「${current.options[current.answer]}」。`;
+      window.setTimeout(() => {
+        quizIndex = (quizIndex + 1) % quiz.length;
+        renderQuiz();
+      }, 2100);
+    });
+
+    renderQuiz();
+  </script>
+</body>
+</html>
